@@ -1,2 +1,2 @@
 # ConceptAndCo
-Projet pourPROMEO
+Projet pour PROMEO
