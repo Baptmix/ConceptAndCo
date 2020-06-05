@@ -16,9 +16,8 @@ if ($_SESSION['id_privilege'] === '2') {
     include 'header_user.php';
 }
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$modificationPassword = new noGrade();
-$modificationPassword->modificationPassword($dbco);
+$modificationPassword = new noGrade($dbco);
+$modificationPassword->modificationPassword();
 
 ?>
 </body>

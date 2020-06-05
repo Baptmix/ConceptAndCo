@@ -17,9 +17,8 @@ session_start();
 include "fonctionnalite/connexion.php";
 include "fonctionnalite/noGrade.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$login = new noGrade();
-$login->login($dbco);
+$login = new noGrade($dbco);
+$login->login();
 
 ?>
 </body>

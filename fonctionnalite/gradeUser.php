@@ -1,12 +1,29 @@
 <?php
 
+/**
+ * Class gradeUser
+ */
 class gradeUser
 {
-    public function list_project(connexion $connexion)
+    /**
+     * @var PDO 
+     */
+    private $connection;
+
+    /**
+     * gradeUser constructor.
+     * @param connexion $connexion
+     */
+    public function __construct(connexion $connexion)
+    {
+        $this->connection = $connexion->dbco;
+    }
+    
+    public function listProject()
     {
         $login = $_SESSION['login'];
         $requeteSql = "SELECT `id`, `nom_projet`, `attribution`, `date_debut`, `date_fin` FROM `projet` WHERE `attribution` = '$login';";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<center><div style='max-width: 97%;'>

@@ -11,8 +11,8 @@ include "header_admin.php";
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeAdmin.php";
 
-$listProject = new gradeAdmin($dbco);
-$listProject->listProject();
+$createEquipes = new gradeAdmin($dbco);
+$createEquipes->createEquipes();
 
 ?>
 </body>

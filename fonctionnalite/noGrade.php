@@ -1,8 +1,25 @@
 <?php
 
+/**
+ * Class noGrade
+ */
 class noGrade
 {
-    public function add_taches(connexion $connexion)
+    /**
+     * @var PDO
+     */
+    private $connection;
+
+    /**
+     * noGrade constructor.
+     * @param connexion $connexion
+     */
+    public function __construct(connexion $connexion)
+    {
+        $this->connection = $connexion->dbco;
+    }
+
+    public function addTaches()
     {
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='add_taches.php' novalidate>
@@ -18,7 +35,7 @@ class noGrade
         <div class='col-md-6 mb-3'>
             <label>Projet associé</label>";
         $requeteSql = "SELECT * FROM `projet`";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<select class='custom-select' required name='projet_associe'>";
@@ -48,20 +65,20 @@ class noGrade
             $status = "en cours";
             $requeteSql = "INSERT INTO `taches` (`id`, `nom_tache`, `description`, `projet_associe`, `date_debut`, 
             `date_fin`, `status`) VALUES (NULL, '$nom_tache', '$description', '$projet_associe', '$date_debut', '$date_fin', '$status');";
-            $sth = $connexion->dbco->prepare($requeteSql);
+            $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
         }
     }
 
-    public function deleteTaches(connexion $connexion)
+    public function deleteTaches()
     {
         $id = $_GET['id'];
         $requeteSQL = "DELETE FROM `taches` WHERE `id`= '$id';";
-        $sth = $connexion->dbco->prepare($requeteSQL);
+        $sth = $this->connection->prepare($requeteSQL);
         $sth->execute();
     }
 
-    public function modificationTachesConfirm(connexion $connexion)
+    public function modificationTachesConfirm()
     {
         $id = $_GET['id'];
         if (isset($_POST['nom_tache'])
@@ -74,13 +91,13 @@ class noGrade
             $date_fin = $_POST['date_fin'];
             $requeteSql = "UPDATE `taches` SET `nom_tache` = '$nom_tache', `description` = '$description', 
             `projet_associe` = '$projet_associe', `date_debut` = '$date_debut', `date_fin` = '$date_fin' WHERE `taches`.`id` = '$id';";
-            $sth = $connexion->dbco->prepare($requeteSql);
+            $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
             header("Location: list_taches.php");
         }
     }
 
-    public function modificationTaches(connexion $connexion)
+    public function modificationTaches()
     {
         $id = $_GET['id'];
         echo "<center><div style='max-width: 97%;'>
@@ -98,7 +115,7 @@ class noGrade
             <input type='text' name='description' class='form-control' id='validationCustom01' value='$description'>
         </div>";
         $requeteSql = "SELECT * FROM `projet`";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<div class='col-md-6 mb-3'>
@@ -121,12 +138,12 @@ class noGrade
         echo '</form></center>';
     }
 
-    public function list_taches(connexion $connexion)
+    public function listTaches()
     {
         $login = $_SESSION['login'];
         $requeteSql = "SELECT `id`, `nom_tache`, `description`, `projet_associe`, `date_debut`, `date_fin`, `status` 
         FROM `taches` WHERE `projet_associe` IN (SELECT `nom_projet` FROM `projet` WHERE `attribution` = '$login')";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<center><div style='max-width: 97%;'>
@@ -168,7 +185,7 @@ class noGrade
         echo "</table></div></center>";
     }
 
-    public function modificationPassword(connexion $connexion)
+    public function modificationPassword()
     {
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='modification_password.php' novalidate>
@@ -190,7 +207,7 @@ class noGrade
                     $newmdp = $_POST['newmdp'];
                     $id = $_SESSION['id'];
                     $requeteSql = "UPDATE `account` SET `password` = '$newmdp' WHERE `account`.`id` = '$id';";
-                    $sth = $connexion->dbco->prepare($requeteSql);
+                    $sth = $this->connection->prepare($requeteSql);
                     $sth->execute();
                     header("Location: logout.php");
                 }
@@ -215,6 +232,23 @@ class noGrade
             <td><a href='modification_password.php'><button type='button' class='btn btn-warning'>Modifier</button></a></td>
         </tr>
         <tr>
+            <th scope='col'>Mon équipe</th>
+            <td>";
+        $requeteSql = "SELECT `id_equipes` FROM `account` WHERE `account`.`login` = '$login' AND `account`.`password` = '$password' LIMIT 1";
+        $sth = $this->connection->prepare($requeteSql);
+        $sth->execute();
+        $selection = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $id_equipes = $selection[0]['id_equipes'];
+        $requeteSql = "SELECT `nom` FROM `equipes` WHERE `equipes`.`id` = '$id_equipes' LIMIT 1";
+        $sth = $this->connection->prepare($requeteSql);
+        $sth->execute();
+        $selection = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $mon_equipe = $selection[0]['nom'];
+        echo $mon_equipe;
+        echo "</td>
+            <td></td>
+        </tr>
+        <tr>
         <th scope='col'>Grade du compte</th>
         <td>";
         if (isset($_SESSION['id_privilege'])) {
@@ -232,7 +266,7 @@ class noGrade
         </center>";
     }
 
-    public function login(connexion $connexion)
+    public function login()
     {
         echo "<form method='post' action='index.php'>
         <center><br><div class='align-items-center'>
@@ -275,7 +309,7 @@ class noGrade
         if (isset($_POST['login']) and isset($_POST['password'])) {
             $login = $_POST['login'];
             $password = $_POST['password'];
-            $req = $connexion->dbco->prepare("SELECT * FROM `account` WHERE `login`='$login' AND `password`='$password';");
+            $req = $this->connection->prepare("SELECT * FROM `account` WHERE `login`='$login' AND `password`='$password';");
             $req->execute(array(
                 'login' => $login,
                 'password' => $password));

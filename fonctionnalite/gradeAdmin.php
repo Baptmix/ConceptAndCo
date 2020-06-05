@@ -1,22 +1,165 @@
 <?php
 
+/**
+ * Class gradeAdmin
+ */
 class gradeAdmin
 {
-    public function deactivate(connexion $connexion)
+    /**
+     * @var PDO
+     */
+    private $connection;
+
+    /**
+     * gradeAdmin constructor.
+     * @param connexion $connexion
+     */
+    public function __construct(connexion $connexion)
+    {
+        $this->connection = $connexion->dbco;
+    }
+
+    public function createEquipes()
+    {
+        echo "<center><div style='max-width: 97%;'>
+        <form class='needs-validation' method='post' action='create_equipes.php' novalidate>
+        <div class='form-row'>
+         <div class='col-md-6 mb-3'>
+            <label for='validationCustom01'>Nom</label>
+            <input type='text' name='nom' class='form-control' id='validationCustom01' placeholder='Nom' required>
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label>Mettre des utilisateurs</label>";
+        $requeteSql = "SELECT * FROM `account`";
+        $sth = $this->connection->prepare($requeteSql);
+        $sth->execute();
+        $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        echo "<select class='custom-select' name='account' required>";
+        foreach ($result as $row) {
+            echo "<option>" . $row['login'] . "</option>";
+        }
+        echo "</select></div></div>";
+        echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'équipe</button></form></div></center>";
+        if (isset($_POST['nom']) and $_POST['nom'] !== '' and $_POST['nom'] !== null) {
+            $nom = $_POST['nom'];
+            $requeteSql = "INSERT INTO `equipes` (`id`, `nom`, `deactivate`) VALUES (NULL, '$nom', 'non');";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            $account = $_POST['account'];
+            $requeteSql = "SELECT `id` FROM `equipes` WHERE `nom` = '$nom' LIMIT 1";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            $id_equipe = $result[0]['id'];
+            $requeteSql = "UPDATE `account` SET `id_equipes` = '$id_equipe' WHERE `account`.`login` = '$account';";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+        }
+    }
+
+    public function modificationEquipesConfirm()
+    {
+        $id = $_GET['id'];
+        if (isset($_POST['nom_equipe'])
+            and $_POST['nom_equipe'] !== ''
+            and $_POST['nom_equipe'] !== null) {
+            $nom_equipe = $_POST['nom_equipe'];
+            $requeteSql = "UPDATE `equipes` SET `nom` = '$nom_equipe' WHERE `equipes`.`id` = '$id';";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            header("Location: list_equipes.php");
+        }
+    }
+
+
+    public function modificationEquipes()
+    {
+        $id = $_GET['id'];
+        echo "<center><div style='max-width: 97%;'>
+        <form class='needs-validation' method='post' action='modification_equipes_admin_confirm.php?id=$id' novalidate>";
+        $nom_equipe = $_GET['nom_equipe'];
+        echo "<div class='form-row'>
+        <div class='col-md-6 mb-3'>
+            <label for='validationCustom01'>Nom de l'équipe</label>
+            <input type='text' name='nom_equipe' class='form-control' id='validationCustom01' value='$nom_equipe'>
+        </div>
+        </div>";
+        echo "<button class='btn btn-success' type='submit'>Modifier l'équipe</button>";
+        echo '</form></center>';
+    }
+
+
+    public function listEquipes()
+    {
+        $requeteSql = "SELECT `id`, `nom` FROM `equipes` WHERE `deactivate` <> 'oui'";
+        $sth = $this->connection->prepare($requeteSql);
+        $sth->execute();
+        $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        echo "<center><div style='max-width: 97%;'>
+        <table class='table table-hover'>
+        <thead>
+          <tr>
+              <th scope='col'>Nom de l'équipe</th>
+              <th scope='col'>Nombre de membres</th>
+              <th scope='col'></th>
+              <th scope='col'></th>
+              </tr>
+        </thead>";
+        foreach ($result as $row) {
+            $nom_equipe = $row['nom'];
+            echo "<tbody>
+             <tr>
+            <td>$nom_equipe</td>
+            <td>";
+            $requeteSql = "SELECT `id` FROM `equipes` WHERE `equipes`.`nom` = '$nom_equipe'";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            $id_equipes = $result[0]['id'];
+            $requeteSql = "SELECT COUNT(`id_equipes`) AS `count` FROM `account` WHERE `account`.`id_equipes` = '$id_equipes'";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            $count = $result[0]['count'];
+            echo $count;
+            echo "</td>
+            <td>";
+            $id = $row['id'];
+            echo "<a href='modification_equipes_admin.php?nom_equipe=$nom_equipe&id=$id'>
+                        <button type='button' class='btn btn-warning'>Modifier</button></a>";
+            echo "</td><td>";
+            echo "<a href='deactivate_equipes.php?id=$id'><button type='button' class='btn btn-danger'>Désactiver</button></a>
+            </td>
+            </tr>
+            </tbody>";
+        }
+        echo "</table></div></center>";
+    }
+
+    public function deactivateAccount()
     {
         $id = $_GET['id'];
         $requeteSQL = "UPDATE `account` SET `deactivate` = 'oui' WHERE `account`.`id` = $id;";
-        $sth = $connexion->dbco->prepare($requeteSQL);
+        $sth = $this->connection->prepare($requeteSQL);
         $sth->execute();
     }
 
-    public function administration(connexion $connexion)
+    public function deactivateEquipes()
+    {
+        $id = $_GET['id'];
+        $requeteSQL = "UPDATE `equipes` SET `deactivate` = 'oui' WHERE `equipes`.`id` = $id;";
+        $sth = $this->connection->prepare($requeteSQL);
+        $sth->execute();
+    }
+
+    public function administration()
     {
         $requeteSql = "SELECT `id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, `deactivate` 
         FROM `account` WHERE `id_privilege` <> '2' AND `deactivate` <> 'oui'";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
         echo "<center><div style='max-width: 97%;'>
         <table class='table table-hover'>
         <thead>
@@ -24,7 +167,7 @@ class gradeAdmin
               <th scope='col'>Nom</th>
               <th scope='col'>Prénom</th>
               <th scope='col'>Email</th>
-              <th scope='col'></th>
+              <th scope='col'>Administration des utilisateurs</th>
               </tr>
         </thead>";
         foreach ($result as $row) {
@@ -38,18 +181,16 @@ class gradeAdmin
             <td>$email</td>
             <td>";
             $id = $row['id'];
-            echo "<a href='deactivate.php?id=$id'>
+            echo "<a href='deactivate_account.php?id=$id'>
                         <button type='button' class='btn btn-warning'>Désactiver</button></a>";
             echo "</td>
             </tr>
             </tbody>";
         }
         echo "</table></div></center>";
-
-
     }
 
-    public function createUser(connexion $connexion)
+    public function createUser()
     {
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='create_user_admin.php' novalidate>
@@ -71,9 +212,20 @@ class gradeAdmin
             <input type='password' name='password' class='form-control' placeholder='Mot de passe' required>
         </div>
         <div class='col-md-6 mb-3'>
+            <label>Equipe</label>";
+        $requeteSql = "SELECT * FROM `equipes`";
+        $sth = $this->connection->prepare($requeteSql);
+        $sth->execute();
+        $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        echo "<select class='custom-select' name='id_equipes' required>";
+        foreach ($result as $row) {
+            echo "<option>" . utf8_encode($row['nom']) . "</option>";
+        }
+        echo "</select></div>";
+        echo "<div class='col-md-6 mb-3'>
             <label>Grade</label>";
         $requeteSql = "SELECT * FROM `privilege`";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<select class='custom-select' name='id_privilege' required>";
@@ -84,31 +236,42 @@ class gradeAdmin
         <p>L'utilisateur a t'il un handicap visuel ?</p>
         <input type='radio' name='radio' value='oui'>oui
         <input type='radio' name='radio' value='non'>non";
-        echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l utilisateur</button></form></div></center>";
+        echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'utilisateur</button></form></div></center>";
         if (isset($_POST['login']) and $_POST['login'] !== '' and $_POST['login'] !== null) {
             $login = $_POST['login'];
             $nom = $_POST['nom'];
             $prenom = $_POST['prenom'];
             $password = $_POST['password'];
+            $idEquipes = utf8_encode($_POST['id_equipes']);
+            $requeteSql = "SELECT `id` FROM `equipes` WHERE `equipes`.`nom` = '$idEquipes' LIMIT 1";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            $idEquipes = $result[0]['id'];
             $idPrivilege = $_POST['id_privilege'];
-            if ($idPrivilege == 'user') {
+            $requeteSql = "SELECT `id` FROM `privilege` WHERE `privilege`.`wording` = '$idPrivilege'";
+            $sth = $this->connection->prepare($requeteSql);
+            $sth->execute();
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            if (isset($result[0]['id'])){
+                $idPrivilege = $result[0]['id'];
+            } else {
                 $idPrivilege = '1';
-            } elseif ($idPrivilege == 'administrator') {
-                $idPrivilege = '2';
             }
+
             if ($_POST['radio'] == 'oui') {
                 $isHandicapped = 'oui';
             } elseif ($_POST['radio'] == 'non') {
                 $isHandicapped = 'non';
             }
-            $requeteSql = "INSERT INTO `account` (`id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, `deactivate`) 
-            VALUES (NULL, '$nom', '$prenom', '$login', '$password', '$idPrivilege', '$isHandicapped', 'non');";
-            $sth = $connexion->dbco->prepare($requeteSql);
+            $requeteSql = "INSERT INTO `account` (`id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, 
+            `id_equipes`, `deactivate`) VALUES (NULL, '$nom', '$prenom', '$login', '$password', '$idPrivilege', '$isHandicapped', '$idEquipes','non');";
+            $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
         }
     }
 
-    public function addProject(connexion $connexion)
+    public function addProject()
     {
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='add_projet_admin.php' novalidate>
@@ -120,7 +283,7 @@ class gradeAdmin
         <div class='col-md-6 mb-3'>
             <label>Attribution</label>";
         $requeteSql = "SELECT * FROM `account`";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<select class='custom-select' required name='attribution'>";
@@ -148,24 +311,24 @@ class gradeAdmin
             $dateFin = $_POST['date_fin'];
             $requeteSql = "INSERT INTO `projet` (`id`, `nom_projet`, `attribution`, `date_debut`, `date_fin`)
             VALUES (NULL, '$nomProjet', '$attribution', '$dateDebut', '$dateFin');";
-            $sth = $connexion->dbco->prepare($requeteSql);
+            $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
         }
     }
 
-    public function deleteProject(connexion $connexion)
+    public function deleteProject()
     {
         $id = $_GET['id'];
         $requeteSQL = "DELETE FROM `projet` WHERE `id`= '$id';";
-        $sth = $connexion->dbco->prepare($requeteSQL);
+        $sth = $this->connection->prepare($requeteSQL);
         $sth->execute();
     }
 
-    public function list_project(connexion $connexion)
+    public function listProject()
     {
         $login = $_SESSION['login'];
         $requeteSql = "SELECT `id`, `nom_projet`, `attribution`, `date_debut`, `date_fin` FROM `projet` WHERE `attribution` = '$login';";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<center><div style='max-width: 97%;'>
@@ -189,9 +352,9 @@ class gradeAdmin
             $dateFin = $rest = substr($date_fin, 0, -9);
             $dateDebut = $rest = substr($date_debut, 0, -9);
             $width = 60;
-            if ($dateFin == date('Y-m-d')){
+            if ($dateFin == date('Y-m-d')) {
                 $width = 100;
-            } elseif ($dateDebut == date('Y-m-d')){
+            } elseif ($dateDebut == date('Y-m-d')) {
                 $width = 10;
             }
             $progression = "<div class='progress'>
@@ -222,7 +385,7 @@ class gradeAdmin
         echo "</table></div></center>";
     }
 
-    public function modificationProject(connexion $connexion)
+    public function modificationProject()
     {
         $id = $_GET['id'];
         echo "<center><div style='max-width: 97%;'>
@@ -234,7 +397,7 @@ class gradeAdmin
             <input type='text' name='nom_projet' class='form-control' id='validationCustom01' value='$nom_projet'>
         </div>";
         $requeteSql = "SELECT * FROM `account`";
-        $sth = $connexion->dbco->prepare($requeteSql);
+        $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<div class='col-md-6 mb-3'>
@@ -257,7 +420,7 @@ class gradeAdmin
         echo '</form></center>';
     }
 
-    public function modificationProjectConfirm(connexion $connexion)
+    public function modificationProjectConfirm()
     {
         $id = $_GET['id'];
         if (isset($_POST['nom_projet'])
@@ -268,7 +431,7 @@ class gradeAdmin
             $dateDebut = $_POST['date_debut'];
             $dateFin = $_POST['date_fin'];
             $requeteSql = "UPDATE `projet` SET `nom_projet` = '$nomProjet', `attribution` = '$attribution', `date_debut` = '$dateDebut', `date_fin` = '$dateFin' WHERE `projet`.`id` = '$id';";
-            $sth = $connexion->dbco->prepare($requeteSql);
+            $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
             header("Location: list_projet_admin.php");
         }

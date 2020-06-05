@@ -16,7 +16,7 @@ if ($_SESSION['id_privilege'] === '2') {
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/noGrade.php";
 
-$profile = new noGrade();
+$profile = new noGrade($dbco);
 $profile->profile();
 
 ?>

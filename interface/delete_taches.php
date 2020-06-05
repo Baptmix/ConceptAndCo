@@ -3,8 +3,7 @@
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/noGrade.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$deleteTaches = new noGrade();
-$deleteTaches->deleteTaches($dbco);
+$deleteTaches = new noGrade($dbco);
+$deleteTaches->deleteTaches();
 
 header("Location: list_taches.php");

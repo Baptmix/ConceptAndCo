@@ -11,9 +11,8 @@ include "header_user.php";
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeUser.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$listProject = new gradeUser();
-$listProject->list_project($dbco);
+$listProject = new gradeUser($dbco);
+$listProject->listProject();
 
 ?>
 </body>

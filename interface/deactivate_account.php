@@ -3,8 +3,7 @@
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeAdmin.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$deactivate = new gradeAdmin();
-$deactivate->deactivate($dbco);
+$deactivateAccount = new gradeAdmin($dbco);
+$deactivateAccount->deactivateAccount();
 
 header("Location: administration.php");

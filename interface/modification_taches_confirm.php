@@ -11,6 +11,5 @@ if ($_SESSION['id_privilege'] === '2') {
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/noGrade.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$modificationTachesConfirm = new noGrade();
-$modificationTachesConfirm->modificationTachesConfirm($dbco);
+$modificationTachesConfirm = new noGrade($dbco);
+$modificationTachesConfirm->modificationTachesConfirm();

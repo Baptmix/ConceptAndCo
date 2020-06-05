@@ -11,9 +11,8 @@ include "header_admin.php";
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/noGrade.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$modificationTaches = new noGrade();
-$modificationTaches->modificationTaches($dbco);
+$modificationTaches = new noGrade($dbco);
+$modificationTaches->modificationTaches();
 
 ?>
 </body>

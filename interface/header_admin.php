@@ -75,6 +75,28 @@
 
             <?php
             $nomDeLaPageEnCours = basename($_SERVER['REQUEST_URI'], ".php");
+            if ($nomDeLaPageEnCours === "list_equipes") {
+                echo '<li class="nav-item active">';
+            } else {
+                echo '<li class="nav-item ">';
+            }
+            ?>
+            <a class="nav-link" href="list_equipes.php">Consulter les équipes<span class="sr-only">(current)</span></a>
+            </li>
+
+            <?php
+            $nomDeLaPageEnCours = basename($_SERVER['REQUEST_URI'], ".php");
+            if ($nomDeLaPageEnCours === "create_equipes") {
+                echo '<li class="nav-item active">';
+            } else {
+                echo '<li class="nav-item ">';
+            }
+            ?>
+            <a class="nav-link" href="create_equipes.php">Créer une équipe<span class="sr-only">(current)</span></a>
+            </li>
+
+            <?php
+            $nomDeLaPageEnCours = basename($_SERVER['REQUEST_URI'], ".php");
             if ($nomDeLaPageEnCours === "profile" or $nomDeLaPageEnCours === "modification_password") {
                 echo '<li class="nav-item active">';
             } else {

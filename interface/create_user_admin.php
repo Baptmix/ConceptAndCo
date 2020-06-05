@@ -11,9 +11,8 @@ include "header_admin.php";
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeAdmin.php";
 
-$dbco = new connexion("localhost", "ppedev", "root", "");
-$createUser = new gradeAdmin();
-$createUser->createUser($dbco);
+$createUser = new gradeAdmin($dbco);
+$createUser->createUser();
 
 ?>
 </body>
