@@ -48,6 +48,6 @@ class gradeUser
         <td>$date_fin</td>
         </tr></tbody>";
         }
-        echo "</table>";
+        echo "</table></div>";
     }
 }

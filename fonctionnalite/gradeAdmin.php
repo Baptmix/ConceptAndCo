@@ -23,37 +23,41 @@ class gradeAdmin
     {
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='create_equipes.php' novalidate>
-        <div class='form-row'>
-         <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Nom</label>
-            <input type='text' name='nom' class='form-control' id='validationCustom01' placeholder='Nom' required>
-        </div>
-        <div class='col-md-6 mb-3'>
-            <label>Mettre des utilisateurs</label>";
+        <div class='form-group row'>
+        <label for='inputPassword' class='col-sm-2 col-form-label'>Nom de l'équipe</label>
+        <div class='col-sm-10'>
+        <input type='text' name='nom' class='form-control' id='inputPassword' placeholder='Nom' required>
+        </div></div>";
+        echo "<br><h4>Ajouter des utilisateurs</h4><br>";
         $requeteSql = "SELECT * FROM `account`";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        echo "<select class='custom-select' name='account' required>";
+        echo "<ul class='list-group'>";
         foreach ($result as $row) {
-            echo "<option>" . $row['login'] . "</option>";
+            $login = $row['login'];
+            echo "<li class='list-group-item d-flex justify-content-between align-items-center'>$login
+            <span><input type='checkbox' name='checkbox[]' value='$login'></span>
+            </li>";
         }
-        echo "</select></div></div>";
+        echo "</ul></div>";
         echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'équipe</button></form></div></center>";
         if (isset($_POST['nom']) and $_POST['nom'] !== '' and $_POST['nom'] !== null) {
             $nom = $_POST['nom'];
             $requeteSql = "INSERT INTO `equipes` (`id`, `nom`, `deactivate`) VALUES (NULL, '$nom', 'non');";
             $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
-            $account = $_POST['account'];
+            $account = $_POST['checkbox'];
             $requeteSql = "SELECT `id` FROM `equipes` WHERE `nom` = '$nom' LIMIT 1";
             $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
             $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-            $id_equipe = $result[0]['id'];
-            $requeteSql = "UPDATE `account` SET `id_equipes` = '$id_equipe' WHERE `account`.`login` = '$account';";
-            $sth = $this->connection->prepare($requeteSql);
-            $sth->execute();
+            $id_equipes = $result[0]['id'];
+            foreach ($account as $row) {
+                $requeteSql = "UPDATE `account` SET `id_equipes` = '$id_equipes' WHERE `account`.`login` = '$row';";
+                $sth = $this->connection->prepare($requeteSql);
+                $sth->execute();
+            }
         }
     }
 
@@ -253,7 +257,7 @@ class gradeAdmin
             $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
             $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-            if (isset($result[0]['id'])){
+            if (isset($result[0]['id'])) {
                 $idPrivilege = $result[0]['id'];
             } else {
                 $idPrivilege = '1';
