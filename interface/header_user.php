@@ -52,8 +52,6 @@
             </li>
         </ul>
     </div>
-    <a href="logout.php">
-        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Déconnexion</button>
-    </a>
+   <a href='logout.php'><button class='btn btn-outline-light my-2 my-sm-0' type='submit'>Déconnexion</button></a>
 </nav>
 <br><br>

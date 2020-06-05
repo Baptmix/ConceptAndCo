@@ -41,7 +41,12 @@ class gradeAdmin
             </li>";
         }
         echo "</ul></div>";
-        echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'équipe</button></form></div></center>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'équipe</button>";
+        } else {
+            echo "<br><br><button class='btn btn-secondary' type='submit'>Ajouter l'équipe</button>";
+        }
+        echo "</form></div></center>";
         if (isset($_POST['nom']) and $_POST['nom'] !== '' and $_POST['nom'] !== null) {
             $nom = $_POST['nom'];
             $requeteSql = "INSERT INTO `equipes` (`id`, `nom`, `deactivate`) VALUES (NULL, '$nom', 'non');";
@@ -129,11 +134,21 @@ class gradeAdmin
             echo "</td>
             <td>";
             $id = $row['id'];
-            echo "<a href='modification_equipes_admin.php?nom_equipe=$nom_equipe&id=$id'>
+
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='modification_equipes_admin.php?nom_equipe=$nom_equipe&id=$id'>
                         <button type='button' class='btn btn-warning'>Modifier</button></a>";
+            } else {
+                echo "<a href='modification_equipes_admin.php?nom_equipe=$nom_equipe&id=$id'>
+                        <button type='button' class='btn btn-secondary'>Modifier</button></a>";
+            }
             echo "</td><td>";
-            echo "<a href='deactivate_equipes.php?id=$id'><button type='button' class='btn btn-danger'>Désactiver</button></a>
-            </td>
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='deactivate_equipes.php?id=$id'><button type='button' class='btn btn-danger'>Désactiver</button></a>";
+            } else {
+                echo "<a href='deactivate_equipes.php?id=$id'><button type='button' class='btn btn-dark'>Désactiver</button></a>";
+            }
+            echo "</td>
             </tr>
             </tbody>";
         }
@@ -185,8 +200,13 @@ class gradeAdmin
             <td>$email</td>
             <td>";
             $id = $row['id'];
-            echo "<a href='deactivate_account.php?id=$id'>
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='deactivate_account.php?id=$id'>
                         <button type='button' class='btn btn-warning'>Désactiver</button></a>";
+            } else {
+                echo "<a href='deactivate_account.php?id=$id'>
+                        <button type='button' class='btn btn-secondary'>Désactiver</button></a>";
+            }
             echo "</td>
             </tr>
             </tbody>";
@@ -240,7 +260,12 @@ class gradeAdmin
         <p>L'utilisateur a t'il un handicap visuel ?</p>
         <input type='radio' name='radio' value='oui'>oui
         <input type='radio' name='radio' value='non'>non";
-        echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'utilisateur</button></form></div></center>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'utilisateur</button>";
+        } else {
+            echo "<br><br><button class='btn btn-secondary' type='submit'>Ajouter l'utilisateur</button>";
+        }
+        echo "</form></div></center>";
         if (isset($_POST['login']) and $_POST['login'] !== '' and $_POST['login'] !== null) {
             $login = $_POST['login'];
             $nom = $_POST['nom'];
@@ -303,9 +328,13 @@ class gradeAdmin
             <label for='validationCustom01'>Date de fin</label>
             <input type='date' name='date_fin' class='form-control' required>
         </div>
-        </div>
-        <button class='btn btn-primary' type='submit'>Ajouter le projet</button>
-        </form>
+        </div>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<button class='btn btn-primary' type='submit'>Ajouter le projet</button>";
+        } else {
+            echo "<button class='btn btn-secondary' type='submit'>Ajouter le projet</button>";
+        }
+        echo "</form>
         </div>
         </center>";
         if (isset($_POST['nom_projet']) and $_POST['nom_projet'] !== '' and $_POST['nom_projet'] !== null) {
@@ -361,9 +390,15 @@ class gradeAdmin
             } elseif ($dateDebut == date('Y-m-d')) {
                 $width = 10;
             }
-            $progression = "<div class='progress'>
-            <div class='progress-bar-animated progress-bar-striped bg-success' role='progressbar' style='width: $width%' aria-valuenow='75' aria-valuemin='0' aria-valuemax='100'></div>
-            </div>";
+            if ($_SESSION['is_handicapped'] == 'non') {
+                $progression = "<div class='progress'>
+                <div class='progress-bar-animated progress-bar-striped bg-success' role='progressbar' style='width: $width%' aria-valuenow='75' aria-valuemin='0' aria-valuemax='100'></div>
+                </div>";
+            } else {
+                $progression = "<div class='progress'>
+                <div class='progress-bar-animated progress-bar-striped bg-secondary' role='progressbar' style='width: $width%' aria-valuenow='75' aria-valuemin='0' aria-valuemax='100'></div>
+                </div>";
+            }
             echo "<tbody>
              <tr>
             <td>$nom_projet</td>
@@ -377,14 +412,20 @@ class gradeAdmin
             $date_debut = $row['date_debut'];
             $date_fin = $row['date_fin'];
             $id = $row['id'];
-            echo "<a href='modification_projet_admin.php?nom_projet=$nom_projet&attribution=$attribution&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='modification_projet_admin.php?nom_projet=$nom_projet&attribution=$attribution&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
                         <button type='button' class='btn btn-warning'>Modifier</button></a>";
+            } else {
+                echo "<a href='modification_projet_admin.php?nom_projet=$nom_projet&attribution=$attribution&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
+                        <button type='button' class='btn btn-secondary'>Modifier</button></a>";
+            }
             echo "</td><td>";
-            $id = $row['id'];
-            echo "<a href='delete_projet.php?id=$id'><button type='button' class='btn btn-danger'>Supprimer</button></a>
-            </td>
-            </tr>
-            </tbody>";
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='delete_projet.php?id=$id'><button type='button' class='btn btn-danger'>Supprimer</button></a>";
+            } else {
+                echo "<a href='delete_projet.php?id=$id'><button type='button' class='btn btn-dark'>Supprimer</button></a>";
+            }
+            echo "</td></tr></tbody>";
         }
         echo "</table></div></center>";
     }

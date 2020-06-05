@@ -51,9 +51,13 @@ class noGrade
             <label for='validationCustom01'>Date de fin</label>
             <input type='date' name='date_fin' class='form-control' required>
         </div>
-        </div>
-        <button class='btn btn-primary' type='submit'>Ajouter la tâche</button>
-        </form>
+        </div>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo " <button class='btn btn-primary' type='submit'>Ajouter la tâche</button>";
+        } else {
+            echo " <button class='btn btn-secondary' type='submit'>Ajouter la tâche</button>";
+        }
+        echo "</form>
         </div>
         </center>";
         if (isset($_POST['nom_tache']) and $_POST['nom_tache'] !== '' and $_POST['nom_tache'] !== null) {
@@ -174,11 +178,20 @@ class noGrade
             <td>$date_debut</td>
             <td>$date_fin</td>
             <td>";
-            echo "<a href='modification_taches.php?nom_tache=$nom_tache&description=$description&projet_associe=$projet_associe&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='modification_taches.php?nom_tache=$nom_tache&description=$description&projet_associe=$projet_associe&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
                         <button type='button' class='btn btn-warning'>Modifier</button></a>";
+            } else {
+                echo "<a href='modification_taches.php?nom_tache=$nom_tache&description=$description&projet_associe=$projet_associe&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
+                        <button type='button' class='btn btn-secondary'>Modifier</button></a>";
+            }
             echo "</td><td>";
-            echo "<a href='delete_taches.php?id=$id'><button type='button' class='btn btn-danger'>Supprimer</button></a>
-            </td>
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='delete_taches.php?id=$id'><button type='button' class='btn btn-danger'>Supprimer</button></a>";
+            } else {
+                echo "<a href='delete_taches.php?id=$id'><button type='button' class='btn btn-dark'>Supprimer</button></a>";
+            }
+            echo "</td>
             </tr>
             </tbody>";
         }
@@ -229,7 +242,13 @@ class noGrade
         <tr>
             <th scope='col'>Mot de passe</th>
             <td>$password</td>
-            <td><a href='modification_password.php'><button type='button' class='btn btn-warning'>Modifier</button></a></td>
+            <td>";
+            if ($_SESSION['is_handicapped'] == 'non') {
+                echo "<a href='modification_password.php'><button type='button' class='btn btn-warning'>Modifier</button></a>";
+            } else {
+                echo "<a href='modification_password.php'><button type='button' class='btn btn-secondary'>Modifier</button></a>";
+            }
+            echo "</td>
         </tr>
         <tr>
             <th scope='col'>Mon équipe</th>
@@ -316,9 +335,10 @@ class noGrade
             $result = $req->fetchAll(\PDO::FETCH_ASSOC);
             $_SESSION['login'] = $login;
             $_SESSION['password'] = $password;
-            foreach ($result as $index => $row) {
+            foreach ($result as $row) {
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['id_privilege'] = $row['id_privilege'];
+                $_SESSION['is_handicapped'] = $row['is_handicapped'];
             }
             if ($result) {
                 if ($_SESSION['id_privilege'] === '1') {
