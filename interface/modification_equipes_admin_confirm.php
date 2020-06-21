@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+require_once('session_start.php');
 
 include "header_admin.php";
 include "../fonctionnalite/connexion.php";

@@ -1,3 +1,15 @@
+<?php
+
+require_once('session_start.php');
+
+if ($_SESSION['langage'] === 'fr') {
+    require_once('../traduction/traduction_fr.php');
+} else {
+    require_once('../traduction/traduction_en.php');
+}
+
+?>
+
 <head>
     <meta charset="utf-8">
     <title>CONCEPT & CO</title>
@@ -13,7 +25,9 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="list_projet_admin.php">Consulter les projets<span class="sr-only">(current)</span></a>
+            <a class="nav-link"
+               href="list_projet_admin.php"><?php echo $traduction['HEADER']['PAGE_CONSULTER_PROJETS'] ?><span
+                        class="sr-only">(current)</span></a>
             </li>
 
             <?php
@@ -24,7 +38,8 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="add_projet_admin.php">Ajouter des projets<span
+            <a class="nav-link" href="add_projet_admin.php"><?php echo $traduction['HEADER']['PAGE_AJOUTER_PROJETS'] ?>
+                <span
                         class="sr-only">(current)</span></a>
             </li>
 
@@ -36,7 +51,8 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="list_taches.php">Consulter les tâches<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="list_taches.php"><?php echo $traduction['HEADER']['PAGE_CONSULTER_TACHES'] ?><span
+                        class="sr-only">(current)</span></a>
             </li>
 
             <?php
@@ -47,7 +63,7 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="add_taches.php">Ajouter des tâches<span
+            <a class="nav-link" href="add_taches.php"><?php echo $traduction['HEADER']['PAGE_AJOUTER_TACHES'] ?><span
                         class="sr-only">(current)</span></a>
             </li>
 
@@ -59,7 +75,9 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="create_user_admin.php">Créer un utilisateur<span class="sr-only">(current)</span></a>
+            <a class="nav-link"
+               href="create_user_admin.php"><?php echo $traduction['HEADER']['PAGE_CREER_UTILISATEUR'] ?><span
+                        class="sr-only">(current)</span></a>
             </li>
 
             <?php
@@ -70,7 +88,8 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="administration.php">Administration<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="administration.php"><?php echo $traduction['HEADER']['PAGE_ADMINISTRATION'] ?>
+                <span class="sr-only">(current)</span></a>
             </li>
 
             <?php
@@ -81,7 +100,8 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="list_equipes.php">Consulter les équipes<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="list_equipes.php"><?php echo $traduction['HEADER']['PAGE_CONSULTER_EQUIPES'] ?>
+                <span class="sr-only">(current)</span></a>
             </li>
 
             <?php
@@ -92,7 +112,8 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="create_equipes.php">Créer une équipe<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="create_equipes.php"><?php echo $traduction['HEADER']['PAGE_CREER_EQUIPE'] ?><span
+                        class="sr-only">(current)</span></a>
             </li>
 
             <?php
@@ -103,11 +124,14 @@
                 echo '<li class="nav-item ">';
             }
             ?>
-            <a class="nav-link" href="profile.php">Profil<span
+            <a class="nav-link" href="profile.php"><?php echo $traduction['HEADER']['PAGE_PROFIL'] ?><span
                         class="sr-only">(current)</span></a>
             </li>
         </ul>
     </div>
-    <a href='logout.php'><button class='btn btn-outline-light my-2 my-sm-0' type='submit'>Déconnexion</button></a>
+    <a href='logout.php'>
+        <button class='btn btn-outline-light my-2 my-sm-0'
+                type='submit'><?php echo $traduction['HEADER']['BOUTON_DECONNEXION'] ?></button>
+    </a>
 </nav>
 <br><br>

@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+require_once('session_start.php');
 
 if ($_SESSION['id_privilege'] === '2') {
     include 'header_admin.php';

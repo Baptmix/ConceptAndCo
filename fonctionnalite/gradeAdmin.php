@@ -19,16 +19,16 @@ class gradeAdmin
         $this->connection = $connexion->dbco;
     }
 
-    public function createEquipes()
+    public function createEquipes($traduction)
     {
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='create_equipes.php' novalidate>
         <div class='form-group row'>
-        <label for='inputPassword' class='col-sm-2 col-form-label'>Nom de l'équipe</label>
-        <div class='col-sm-10'>
-        <input type='text' name='nom' class='form-control' id='inputPassword' placeholder='Nom' required>
-        </div></div>";
-        echo "<br><h4>Ajouter des utilisateurs</h4><br>";
+        <label for='inputPassword' class='col-sm-2 col-form-label'>" . $traduction['CREATE_EQUIPES']['LABEL_NOM_EQUIPE'] . "</label>
+            <div class='col-sm-10'>
+            <input type='text' name='nom' class='form-control' id='inputPassword' placeholder='" . $traduction['CREATE_EQUIPES']['PLACEHOLDER_NOM_EQUIPE'] . "' required>
+            </div></div>        
+        <br><h4>" . $traduction['CREATE_EQUIPES']['TITLE_AJOUTER_UTILISATEURS'] . "</h4><br>";
         $requeteSql = "SELECT * FROM `account`";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
@@ -42,9 +42,9 @@ class gradeAdmin
         }
         echo "</ul></div>";
         if ($_SESSION['is_handicapped'] == 'non') {
-            echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'équipe</button>";
+            echo "<br><br><button class='btn btn-primary' type='submit'>" . $traduction['CREATE_EQUIPES']['BOUTON_AJOUTER_EQUIPE'] . "</button>";
         } else {
-            echo "<br><br><button class='btn btn-secondary' type='submit'>Ajouter l'équipe</button>";
+            echo "<br><br><button class='btn btn-secondary' type='submit'>" . $traduction['CREATE_EQUIPES']['BOUTON_AJOUTER_EQUIPE'] . "</button>";
         }
         echo "</form></div></center>";
         if (isset($_POST['nom']) and $_POST['nom'] !== '' and $_POST['nom'] !== null) {
@@ -81,39 +81,34 @@ class gradeAdmin
     }
 
 
-    public function modificationEquipes()
+    public function modificationEquipes($traduction)
     {
         $id = $_GET['id'];
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='modification_equipes_admin_confirm.php?id=$id' novalidate>";
         $nom_equipe = $_GET['nom_equipe'];
-        echo "<div class='form-row'>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Nom de l'équipe</label>
-            <input type='text' name='nom_equipe' class='form-control' id='validationCustom01' value='$nom_equipe'>
-        </div>
-        </div>";
-        echo "<button class='btn btn-success' type='submit'>Modifier l'équipe</button>";
-        echo '</form></center>';
+        echo "<div class='form-row'><div class='col-md-6 mb-3'>
+        <label for='validationCustom01'>" . $traduction['MODIFICATION_EQUIPE']['LABEL_NOM_EQUIPE'] . "</label>
+        <input type='text' name='nom_equipe' class='form-control' id='validationCustom01' value='$nom_equipe'></div></div>
+        <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_EQUIPE']['BOUTON_MODIFIER_CONFIRM'] . "</button>
+        </form></center>";
     }
 
 
-    public function listEquipes()
+    public function listEquipes($traduction)
     {
         $requeteSql = "SELECT `id`, `nom` FROM `equipes` WHERE `deactivate` <> 'oui'";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        echo "<center><div style='max-width: 97%;'>
-        <table class='table table-hover'>
-        <thead>
-          <tr>
-              <th scope='col'>Nom de l'équipe</th>
-              <th scope='col'>Nombre de membres</th>
-              <th scope='col'></th>
-              <th scope='col'></th>
-              </tr>
-        </thead>";
+        echo "<center><div style='max-width: 97%;'><table class='table table-hover'><thead>
+                    <tr>
+                        <th scope='col'>" . $traduction['LIST_EQUIPES']['TABLEAU_LIST_EQUIPES_NOM'] . "</th>
+                        <th scope='col'>" . $traduction['LIST_EQUIPES']['TABLEAU_LIST_EQUIPES_MEMBRES'] . "</th>
+                        <th scope='col'></th>
+                        <th scope='col'></th>
+                    </tr>
+                    </thead>";
         foreach ($result as $row) {
             $nom_equipe = $row['nom'];
             echo "<tbody>
@@ -134,23 +129,22 @@ class gradeAdmin
             echo "</td>
             <td>";
             $id = $row['id'];
-
             if ($_SESSION['is_handicapped'] == 'non') {
                 echo "<a href='modification_equipes_admin.php?nom_equipe=$nom_equipe&id=$id'>
-                        <button type='button' class='btn btn-warning'>Modifier</button></a>";
+                            <button type='button' class='btn btn-warning'>" . $traduction['LIST_EQUIPES']['BOUTON_MODIFIER'] . "</button></a>";
             } else {
                 echo "<a href='modification_equipes_admin.php?nom_equipe=$nom_equipe&id=$id'>
-                        <button type='button' class='btn btn-secondary'>Modifier</button></a>";
+                            <button type='button' class='btn btn-secondary'>" . $traduction['LIST_EQUIPES']['BOUTON_MODIFIER'] . "</button></a>";
             }
             echo "</td><td>";
             if ($_SESSION['is_handicapped'] == 'non') {
-                echo "<a href='deactivate_equipes.php?id=$id'><button type='button' class='btn btn-danger'>Désactiver</button></a>";
+                echo "<a href='deactivate_equipes.php?id=$id'>
+                            <button type='button' class='btn btn-danger'>" . $traduction['LIST_EQUIPES']['BOUTON_DESACTIVER'] . "</button></a>";
             } else {
-                echo "<a href='deactivate_equipes.php?id=$id'><button type='button' class='btn btn-dark'>Désactiver</button></a>";
+                echo "<a href='deactivate_equipes.php?id=$id'>
+                            <button type='button' class='btn btn-dark'>" . $traduction['LIST_EQUIPES']['BOUTON_DESACTIVER'] . "</button></a>";
             }
-            echo "</td>
-            </tr>
-            </tbody>";
+            echo "</td></tr></tbody>";
         }
         echo "</table></div></center>";
     }
@@ -171,24 +165,20 @@ class gradeAdmin
         $sth->execute();
     }
 
-    public function administration()
+    public function administration($traduction)
     {
         $requeteSql = "SELECT `id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, `deactivate` 
         FROM `account` WHERE `id_privilege` <> '2' AND `deactivate` <> 'oui'";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        echo "<center><div style='max-width: 97%;'>
-        <table class='table table-hover'>
-        <thead>
-          <tr>
-              <th scope='col'>Nom</th>
-              <th scope='col'>Prénom</th>
-              <th scope='col'>Email</th>
-              <th scope='col'>Administration des utilisateurs</th>
-              </tr>
-        </thead>";
+        echo "<center><div style='max-width: 97%;'><table class='table table-hover'><thead>
+                    <tr>
+                        <th scope='col'>" . $traduction['ADMINISTRATION']['TABLEAU_ADMINISTRATION_NOM'] . "</th>
+                        <th scope='col'>" . $traduction['ADMINISTRATION']['TABLEAU_ADMINISTRATION_PRENOM'] . "</th>
+                        <th scope='col'>" . $traduction['ADMINISTRATION']['TABLEAU_ADMINISTRATION_EMAIL'] . "</th>
+                        <th scope='col'>" . $traduction['ADMINISTRATION']['TABLEAU_ADMINISTRATION_UTILISATEURS'] . "</th>
+                    </tr></thead>";
         foreach ($result as $row) {
             $nom = $row['nom'];
             $prenom = $row['prenom'];
@@ -202,41 +192,28 @@ class gradeAdmin
             $id = $row['id'];
             if ($_SESSION['is_handicapped'] == 'non') {
                 echo "<a href='deactivate_account.php?id=$id'>
-                        <button type='button' class='btn btn-warning'>Désactiver</button></a>";
+                            <button type='button' class='btn btn-warning'>" . $traduction['ADMINISTRATION']['BOUTON_DESACTIVER'] . "</button></a>";
             } else {
                 echo "<a href='deactivate_account.php?id=$id'>
-                        <button type='button' class='btn btn-secondary'>Désactiver</button></a>";
+                            <button type='button' class='btn btn-secondary'>" . $traduction['ADMINISTRATION']['BOUTON_DESACTIVER'] . "</button></a>";
             }
-            echo "</td>
-            </tr>
-            </tbody>";
+            echo "</td></tr></tbody>";
         }
         echo "</table></div></center>";
     }
 
-    public function createUser()
+    public function createUser($traduction)
     {
-        echo "<center><div style='max-width: 97%;'>
-        <form class='needs-validation' method='post' action='create_user_admin.php' novalidate>
-        <div class='form-row'>
-         <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Nom</label>
-            <input type='text' name='nom' class='form-control' id='validationCustom01' placeholder='Nom' required>
-        </div>
-         <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Prénom</label>
-            <input type='text' name='prenom' class='form-control' id='validationCustom01' placeholder='Prenom' required>
-        </div>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Email</label>
-            <input type='email' name='login' class='form-control' id='validationCustom01' placeholder='Email' required>
-        </div>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Mot de passe</label>
-            <input type='password' name='password' class='form-control' placeholder='Mot de passe' required>
-        </div>
-        <div class='col-md-6 mb-3'>
-            <label>Equipe</label>";
+        echo "<center><div style='max-width: 97%;'><form class='needs-validation' method='post' action='create_user_admin.php' novalidate>
+        <div class='form-row'><div class='col-md-6 mb-3'><label for='validationCustom01'>" . $traduction['CREATE_USER']['NOM'] . "</label>
+        <input type='text' name='nom' class='form-control' id='validationCustom01' placeholder='" . $traduction['CREATE_USER']['NOM'] . "' required>
+        </div><div class='col-md-6 mb-3'><label for='validationCustom01'>" . $traduction['CREATE_USER']['PRENOM'] . "</label>
+        <input type='text' name='prenom' class='form-control' id='validationCustom01' placeholder='" . $traduction['CREATE_USER']['PRENOM'] . "' required>
+        </div><div class='col-md-6 mb-3'><label for='validationCustom01'>" . $traduction['CREATE_USER']['EMAIL'] . "</label>
+        <input type='email' name='login' class='form-control' id='validationCustom01' placeholder='" . $traduction['CREATE_USER']['EMAIL'] . "' required>
+        </div><div class='col-md-6 mb-3'><label for='validationCustom01'>" . $traduction['CREATE_USER']['MOT_DE_PASSE'] . "</label>
+        <input type='password' name='password' class='form-control' placeholder='" . $traduction['CREATE_USER']['MOT_DE_PASSE'] . "' required>
+        </div><div class='col-md-6 mb-3'><label>" . $traduction['CREATE_USER']['EQUIPE'] . "</label>";
         $requeteSql = "SELECT * FROM `equipes`";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
@@ -245,9 +222,7 @@ class gradeAdmin
         foreach ($result as $row) {
             echo "<option>" . utf8_encode($row['nom']) . "</option>";
         }
-        echo "</select></div>";
-        echo "<div class='col-md-6 mb-3'>
-            <label>Grade</label>";
+        echo "</select></div><div class='col-md-6 mb-3'><label>" . $traduction['CREATE_USER']['GRADE'] . "</label>";
         $requeteSql = "SELECT * FROM `privilege`";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
@@ -256,14 +231,16 @@ class gradeAdmin
         foreach ($result as $row) {
             echo "<option>" . utf8_encode($row['wording']) . "</option>";
         }
-        echo "</select></div></div>
-        <p>L'utilisateur a t'il un handicap visuel ?</p>
-        <input type='radio' name='radio' value='oui'>oui
-        <input type='radio' name='radio' value='non'>non";
+        echo "</select></div></div><hr><p>" . $traduction['CREATE_USER']['LABEL_HANDICAP'] . "</p>
+        <input type='radio' name='radio' value='oui'>" . $traduction['CREATE_USER']['RADIO_OUI'] . "&nbsp;&nbsp;&nbsp;
+        <input type='radio' name='radio' value='non'>" . $traduction['CREATE_USER']['RADIO_NON'] . "
+        <br><br><hr><p>" . $traduction['CREATE_USER']['LABEL_LANGAGE'] . "</p>
+        <input type='radio' name='radio2' value='fr'>" . $traduction['CREATE_USER']['RADIO_FR'] . "&nbsp;&nbsp;&nbsp;
+        <input type='radio' name='radio2' value='en'>" . $traduction['CREATE_USER']['RADIO_EN'] . "";
         if ($_SESSION['is_handicapped'] == 'non') {
-            echo "<br><br><button class='btn btn-primary' type='submit'>Ajouter l'utilisateur</button>";
+            echo "<br><br><button class='btn btn-primary' type='submit'>" . $traduction['CREATE_USER']['BOUTON_AJOUTER_UTILISATEUR'] . "</button>";
         } else {
-            echo "<br><br><button class='btn btn-secondary' type='submit'>Ajouter l'utilisateur</button>";
+            echo "<br><br><button class='btn btn-secondary' type='submit'>" . $traduction['CREATE_USER']['BOUTON_AJOUTER_UTILISATEUR'] . "</button>";
         }
         echo "</form></div></center>";
         if (isset($_POST['login']) and $_POST['login'] !== '' and $_POST['login'] !== null) {
@@ -293,24 +270,29 @@ class gradeAdmin
             } elseif ($_POST['radio'] == 'non') {
                 $isHandicapped = 'non';
             }
+
+            if ($_POST['radio2'] == 'fr') {
+                $langage = 'fr';
+            } elseif ($_POST['radio2'] == 'en') {
+                $langage = 'en';
+            }
+
             $requeteSql = "INSERT INTO `account` (`id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, 
-            `id_equipes`, `deactivate`) VALUES (NULL, '$nom', '$prenom', '$login', '$password', '$idPrivilege', '$isHandicapped', '$idEquipes','non');";
+            `id_equipes`, `langage`, `deactivate`) VALUES (NULL, '$nom', '$prenom', '$login', '$password', '$idPrivilege', 
+            '$isHandicapped', '$idEquipes', '$langage','non');";
             $sth = $this->connection->prepare($requeteSql);
             $sth->execute();
         }
     }
 
-    public function addProject()
+    public function addProject($traduction)
     {
-        echo "<center><div style='max-width: 97%;'>
-        <form class='needs-validation' method='post' action='add_projet_admin.php' novalidate>
-        <div class='form-row'>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Création de projet</label>
-            <input type='text' name='nom_projet' class='form-control' id='validationCustom01' placeholder='Nom du projet' required>
-        </div>
-        <div class='col-md-6 mb-3'>
-            <label>Attribution</label>";
+        echo "<center><div style='max-width: 97%;'><form class='needs-validation' method='post' action='add_projet_admin.php' novalidate>
+        <div class='form-row'><div class='col-md-6 mb-3'>
+        <label for='validationCustom01'>" . $traduction['ADD_PROJECT']['LABEL_CREATION_PROJET'] . "</label>
+        <input type='text' name='nom_projet' class='form-control' id='validationCustom01' placeholder='" . $traduction['ADD_PROJECT']['PLACEHOLDER_NOM_PROJET'] . "' required>
+        </div><div class='col-md-6 mb-3'>
+        <label>" . $traduction['ADD_PROJECT']['LABEL_ATTRIBUTION'] . "</label>";
         $requeteSql = "SELECT * FROM `account`";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
@@ -319,24 +301,20 @@ class gradeAdmin
         foreach ($result as $row) {
             echo "<option>" . $row['login'] . "</option>";
         }
-        echo "</select></div>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Date de début</label>
+        echo "</select></div><div class='col-md-6 mb-3'>
+            <label for='validationCustom01'>" . $traduction['ADD_PROJECT']['LABEL_DATE_DEBUT'] . "</label>
             <input type='date' name='date_debut' class='form-control' required>
-        </div>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Date de fin</label>
+        </div><div class='col-md-6 mb-3'>
+            <label for='validationCustom01'>" . $traduction['ADD_PROJECT']['LABEL_DATE_FIN'] . "</label>
             <input type='date' name='date_fin' class='form-control' required>
-        </div>
-        </div>";
+        </div></div>";
         if ($_SESSION['is_handicapped'] == 'non') {
-            echo "<button class='btn btn-primary' type='submit'>Ajouter le projet</button>";
+            echo "<button class='btn btn-primary' type='submit'>" . $traduction['ADD_PROJECT']['BOUTON_AJOUTER_PROJET'] . "</button>";
         } else {
-            echo "<button class='btn btn-secondary' type='submit'>Ajouter le projet</button>";
+            echo "<button class='btn btn-secondary' type='submit'>" . $traduction['ADD_PROJECT']['BOUTON_AJOUTER_PROJET'] . "</button>";
+
         }
-        echo "</form>
-        </div>
-        </center>";
+        echo "</form></div></center>";
         if (isset($_POST['nom_projet']) and $_POST['nom_projet'] !== '' and $_POST['nom_projet'] !== null) {
             $nomProjet = $_POST['nom_projet'];
             $attribution = $_POST['attribution'];
@@ -357,26 +335,23 @@ class gradeAdmin
         $sth->execute();
     }
 
-    public function listProject()
+    public function listProject($traduction)
     {
         $login = $_SESSION['login'];
         $requeteSql = "SELECT `id`, `nom_projet`, `attribution`, `date_debut`, `date_fin` FROM `projet` WHERE `attribution` = '$login';";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        echo "<center><div style='max-width: 97%;'>
-        <table class='table table-hover'>
-        <thead>
-          <tr>
-              <th scope='col'>Nom du projet</th>
-              <th scope='col'>Attribution</th>
-              <th scope='col'>Date de début</th>
-              <th scope='col'>Progression</th>
-              <th scope='col'>Date de fin</th>
-              <th scope='col'></th>
-              <th scope='col'></th>
-              </tr>
-        </thead>";
+        echo "<center><div style='max-width: 97%;'><table class='table table-hover'><thead>
+                    <tr>
+                        <th scope='col'>" . $traduction['LIST_PROJET']['TABLEAU_PROJET_NOM'] . "</th>
+                        <th scope='col'>" . $traduction['LIST_PROJET']['TABLEAU_PROJET_ATTRIBUTION'] . "</th>
+                        <th scope='col'>" . $traduction['LIST_PROJET']['TABLEAU_PROJET_DATE_DEBUT'] . "</th>
+                        <th scope='col'>" . $traduction['LIST_PROJET']['TABLEAU_PROJET_PROGRESSION'] . "</th>
+                        <th scope='col'>" . $traduction['LIST_PROJET']['TABLEAU_PROJET_DATE_FIN'] . "</th>
+                        <th scope='col'></th>
+                        <th scope='col'></th>
+                    </tr></thead>";
         foreach ($result as $row) {
             $nom_projet = $row['nom_projet'];
             $attribution = $row['attribution'];
@@ -414,39 +389,39 @@ class gradeAdmin
             $id = $row['id'];
             if ($_SESSION['is_handicapped'] == 'non') {
                 echo "<a href='modification_projet_admin.php?nom_projet=$nom_projet&attribution=$attribution&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
-                        <button type='button' class='btn btn-warning'>Modifier</button></a>";
+                            <button type='button' class='btn btn-warning'>" . $traduction['LIST_PROJET']['BOUTON_MODIFIER'] . "</button></a>";
             } else {
                 echo "<a href='modification_projet_admin.php?nom_projet=$nom_projet&attribution=$attribution&date_debut=$date_debut&date_fin=$date_fin&id=$id'>
-                        <button type='button' class='btn btn-secondary'>Modifier</button></a>";
+                            <button type='button' class='btn btn-secondary'>" . $traduction['LIST_PROJET']['BOUTON_MODIFIER'] . "</button></a>";
             }
             echo "</td><td>";
             if ($_SESSION['is_handicapped'] == 'non') {
-                echo "<a href='delete_projet.php?id=$id'><button type='button' class='btn btn-danger'>Supprimer</button></a>";
+                echo "<a href='delete_projet.php?id=$id'>
+                            <button type='button' class='btn btn-danger'>" . $traduction['LIST_PROJET']['BOUTON_SUPPRIMER'] . "</button></a>";
             } else {
-                echo "<a href='delete_projet.php?id=$id'><button type='button' class='btn btn-dark'>Supprimer</button></a>";
+                echo "<a href='delete_projet.php?id=$id'>
+                            <button type='button' class='btn btn-dark'>" . $traduction['LIST_PROJET']['BOUTON_SUPPRIMER'] . "</button></a>";
             }
             echo "</td></tr></tbody>";
         }
         echo "</table></div></center>";
     }
 
-    public function modificationProject()
+    public function modificationProject($traduction)
     {
         $id = $_GET['id'];
         echo "<center><div style='max-width: 97%;'>
         <form class='needs-validation' method='post' action='modification_projet_admin_confirm.php?id=$id' novalidate>";
         $nom_projet = $_GET['nom_projet'];
-        echo "<div class='form-row'>
-        <div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>Nom du projet</label>
-            <input type='text' name='nom_projet' class='form-control' id='validationCustom01' value='$nom_projet'>
-        </div>";
+        echo "<div class='form-row'><div class='col-md-6 mb-3'>
+        <label for='validationCustom01'>" . $traduction['MODIFICATION_PROJET']['LABEL_NOM_PROJET'] . "</label>
+        <input type='text' name='nom_projet' class='form-control' id='validationCustom01' value='$nom_projet'></div>";
         $requeteSql = "SELECT * FROM `account`";
         $sth = $this->connection->prepare($requeteSql);
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         echo "<div class='col-md-6 mb-3'>
-        <label for='validationCustom01'>Attribution</label>
+        <label for='validationCustom01'>" . $traduction['MODIFICATION_PROJET']['LABEL_ATTRIBUTION'] . "</label>
         <select class='custom-select' name='attribution'>";
         foreach ($result as $row) {
             $attribution = $_GET['attribution'];
@@ -455,14 +430,14 @@ class gradeAdmin
         echo "</select></div>";
         $date_debut = $_GET['date_debut'];
         echo "<div class='col-md-6 mb-3'>
-        <label for='validationCustom01'>Date de début</label>
+        <label for='validationCustom01'>" . $traduction['MODIFICATION_PROJET']['LABEL_DATE_DEBUT'] . "</label>
         <input type='text' name='date_debut' class='form-control' id='validationCustom01' value='$date_debut'></div>";
         $date_fin = $_GET['date_fin'];
         echo "<div class='col-md-6 mb-3'>
-        <label for='validationCustom01'>Date de fin</label>
-        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>";
-        echo "<button class='btn btn-success' type='submit'>Modifier le projet</button>";
-        echo '</form></center>';
+        <label for='validationCustom01'>" . $traduction['MODIFICATION_PROJET']['LABEL_DATE_FIN'] . "</label>
+        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>
+        <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_PROJET']['BOUTON_MODIFIER_CONFIRM'] . "</button>
+        </form></center>";
     }
 
     public function modificationProjectConfirm()

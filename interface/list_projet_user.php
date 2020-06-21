@@ -5,14 +5,20 @@
 <body>
 <?php
 
-session_start();
+require_once('session_start.php');
+
+if ($_SESSION['langage'] === 'fr') {
+    require_once('../traduction/traduction_fr.php');
+} else {
+    require_once('../traduction/traduction_en.php');
+}
 
 include "header_user.php";
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeUser.php";
 
 $listProject = new gradeUser($dbco);
-$listProject->listProject();
+$listProject->listProject($traduction);
 
 ?>
 </body>

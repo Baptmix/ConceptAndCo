@@ -5,7 +5,13 @@
 <body>
 <?php
 
-session_start();
+require_once('session_start.php');
+
+if ($_SESSION['langage'] === 'fr') {
+    require_once('../traduction/traduction_fr.php');
+} else {
+    require_once('../traduction/traduction_en.php');
+}
 
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/noGrade.php";
@@ -17,7 +23,7 @@ if ($_SESSION['id_privilege'] === '2') {
 }
 
 $modificationPassword = new noGrade($dbco);
-$modificationPassword->modificationPassword();
+$modificationPassword->modificationPassword($traduction);
 
 ?>
 </body>

@@ -5,14 +5,20 @@
 <body>
 <?php
 
-session_start();
+require_once('session_start.php');
+
+if ($_SESSION['langage'] === 'fr') {
+    require_once('../traduction/traduction_fr.php');
+} else {
+    require_once('../traduction/traduction_en.php');
+}
 
 include "header_admin.php";
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeAdmin.php";
 
 $createUser = new gradeAdmin($dbco);
-$createUser->createUser();
+$createUser->createUser($traduction);
 
 ?>
 </body>

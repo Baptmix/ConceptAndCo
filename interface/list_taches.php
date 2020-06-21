@@ -5,7 +5,13 @@
 <body>
 <?php
 
-session_start();
+require_once('session_start.php');
+
+if ($_SESSION['langage'] === 'fr') {
+    require_once('../traduction/traduction_fr.php');
+} else {
+    require_once('../traduction/traduction_en.php');
+}
 
 if ($_SESSION['id_privilege'] === '2') {
     include 'header_admin.php';
@@ -17,7 +23,7 @@ include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/noGrade.php";
 
 $listTaches = new noGrade($dbco);
-$listTaches->listTaches();
+$listTaches->listTaches($traduction);
 
 ?>
 </body>

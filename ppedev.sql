@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  ven. 05 juin 2020 à 11:46
+-- Généré le :  Dim 21 juin 2020 à 19:44
 -- Version du serveur :  10.4.6-MariaDB
 -- Version de PHP :  7.3.9
 
@@ -37,6 +37,7 @@ CREATE TABLE `account` (
   `id_privilege` int(11) DEFAULT NULL,
   `is_handicapped` varchar(3) DEFAULT NULL,
   `id_equipes` int(11) DEFAULT NULL,
+  `langage` varchar(2) DEFAULT NULL,
   `deactivate` varchar(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -44,9 +45,9 @@ CREATE TABLE `account` (
 -- Déchargement des données de la table `account`
 --
 
-INSERT INTO `account` (`id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, `id_equipes`, `deactivate`) VALUES
-(2, 'admin', 'admin', 'admin@admin.fr', 'password1', 2, 'non', 1, 'non'),
-(6, 'user', 'users', 'user@user.fr', 'password2', 1, 'oui', 2, 'non');
+INSERT INTO `account` (`id`, `nom`, `prenom`, `login`, `password`, `id_privilege`, `is_handicapped`, `id_equipes`, `langage`, `deactivate`) VALUES
+(2, 'admin', 'admin', 'admin@admin.fr', 'pwdAdmin1', 2, 'non', 1, 'en', 'non'),
+(6, 'user', 'users', 'user@user.fr', 'pwdUser2', 1, 'non', 2, 'fr', 'non');
 
 -- --------------------------------------------------------
 
@@ -179,13 +180,13 @@ ALTER TABLE `taches`
 -- AUTO_INCREMENT pour la table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT pour la table `equipes`
 --
 ALTER TABLE `equipes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT pour la table `privilege`
