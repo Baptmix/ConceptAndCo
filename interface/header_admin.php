@@ -129,9 +129,16 @@ if ($_SESSION['langage'] === 'fr') {
             </li>
         </ul>
     </div>
-    <a href='logout.php'>
-        <button class='btn btn-outline-light my-2 my-sm-0'
-                type='submit'><?php echo $traduction['HEADER']['BOUTON_DECONNEXION'] ?></button>
-    </a>
+    <?php
+
+    if ($_SESSION['is_handicapped'] == 'oui'){
+        echo "<a href='logout.php'>
+        <button class='btn btn-outline-light my-2 my-sm-0' type='submit'>" . $traduction['HEADER']['BOUTON_DECONNEXION'] . "</button></a>";
+    } else {
+        echo "<a href='logout.php'>
+        <button class='btn btn-outline-danger my-2 my-sm-0' type='submit'>" . $traduction['HEADER']['BOUTON_DECONNEXION'] . "</button></a>";
+    }
+
+    ?>
 </nav>
 <br><br>
