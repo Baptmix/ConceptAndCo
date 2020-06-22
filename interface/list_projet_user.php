@@ -13,7 +13,12 @@ if ($_SESSION['langage'] === 'fr') {
     require_once('../traduction/traduction_en.php');
 }
 
-include "header_user.php";
+if ($_SESSION['id_privilege'] === '2') {
+    include 'header_admin.php';
+} else {
+    include 'header_user.php';
+}
+
 include "../fonctionnalite/connexion.php";
 include "../fonctionnalite/gradeUser.php";
 

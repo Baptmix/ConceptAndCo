@@ -93,14 +93,14 @@ class noGrade
     public function modificationTaches($traduction)
     {
         $id = $_GET['id'];
-        echo "<center><div style='max-width: 97%;'>
-        <form class='needs-validation' method='post' action='modification_taches_confirm.php?id=$id' novalidate>";
         $nom_tache = $_GET['nom_tache'];
-        echo "<div class='form-row'><div class='col-md-6 mb-3'>
-            <label for='validationCustom01'>" . $traduction['MODIFICATION_TACHES']['LABEL_NOM_TACHE'] . "</label>
-            <input type='text' name='nom_tache' class='form-control' id='validationCustom01' value='$nom_tache'></div>";
         $description = $_GET['description'];
-        echo "<div class='form-row'><div class='col-md-6 mb-3'>
+        echo "<center><div style='max-width: 97%;'>
+        <form class='needs-validation' method='post' action='modification_taches_confirm.php?id=$id' novalidate>
+        <div class='form-row'><div class='col-md-6 mb-3'>
+            <label for='validationCustom01'>" . $traduction['MODIFICATION_TACHES']['LABEL_NOM_TACHE'] . "</label>
+            <input type='text' name='nom_tache' class='form-control' id='validationCustom01' value='$nom_tache'></div>
+        <div class='col-md-6 mb-3'>
             <label for='validationCustom01'>" . $traduction['MODIFICATION_TACHES']['LABEL_DESCRIPTION'] . "</label>
             <input type='text' name='description' class='form-control' id='validationCustom01' value='$description'></div>";
         $requeteSql = "SELECT * FROM `projet`";
@@ -122,9 +122,9 @@ class noGrade
         $date_fin = $_GET['date_fin'];
         echo "<div class='col-md-6 mb-3'>
         <label for='validationCustom01'>" . $traduction['MODIFICATION_TACHES']['LABEL_DATE_FIN'] . "</label>
-        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div>
+        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>
         <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_TACHES']['BOUTON_MODIFIER_CONFIRM'] . "</button>
-        </div></form></center>";
+        </form></center>";
     }
 
     public function listTaches($traduction)
