@@ -122,9 +122,13 @@ class noGrade
         $date_fin = $_GET['date_fin'];
         echo "<div class='col-md-6 mb-3'>
         <label for='validationCustom01'>" . $traduction['MODIFICATION_TACHES']['LABEL_DATE_FIN'] . "</label>
-        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>
-        <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_TACHES']['BOUTON_MODIFIER_CONFIRM'] . "</button>
-        </form></center>";
+        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_TACHES']['BOUTON_MODIFIER_CONFIRM'] . "</button>";
+        } else {
+            echo "<button class='btn btn-secondary' type='submit'>" . $traduction['MODIFICATION_TACHES']['BOUTON_MODIFIER_CONFIRM'] . "</button>";
+        }
+        echo "</form></center>";
     }
 
     public function listTaches($traduction)
@@ -185,8 +189,13 @@ class noGrade
         </div><div class='col-md-6 mb-3'>
             <label for='validationCustom01'>" . $traduction['MODIFICATION_PASSWORD']['LABEL_CONFIRMER'] . "</label>
             <input type='password' name='confirmmdp' class='form-control' id='validationCustom01' placeholder='" . $traduction['MODIFICATION_PASSWORD']['PLACEHOLDER_CONFIRMER_MDP'] . "' required>
-        </div></div>
-        <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_PASSWORD']['BOUTON_VALIDER'] . "</button></form></div></center>";
+        </div></div>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_PASSWORD']['BOUTON_VALIDER'] . "</button>";
+        } else {
+            echo "<button class='btn btn-secondary' type='submit'>" . $traduction['MODIFICATION_PASSWORD']['BOUTON_VALIDER'] . "</button>";
+        }
+        echo "</form></div></center>";
         if ((isset($_POST['newmdp'])) and (isset($_POST['confirmmdp']))) {
             if ($_POST['newmdp'] === $_POST['confirmmdp']) {
                 if (($_POST['newmdp'] !== '') or !empty($_POST['newmdp'] !== '')) {

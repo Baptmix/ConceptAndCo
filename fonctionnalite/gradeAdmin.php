@@ -89,9 +89,13 @@ class gradeAdmin
         $nom_equipe = $_GET['nom_equipe'];
         echo "<div class='form-row'><div class='col-md-6 mb-3'>
         <label for='validationCustom01'>" . $traduction['MODIFICATION_EQUIPE']['LABEL_NOM_EQUIPE'] . "</label>
-        <input type='text' name='nom_equipe' class='form-control' id='validationCustom01' value='$nom_equipe'></div></div>
-        <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_EQUIPE']['BOUTON_MODIFIER_CONFIRM'] . "</button>
-        </form></center>";
+        <input type='text' name='nom_equipe' class='form-control' id='validationCustom01' value='$nom_equipe'></div></div>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_EQUIPE']['BOUTON_MODIFIER_CONFIRM'] . "</button>";
+        } else {
+            echo "<button class='btn btn-secondary' type='submit'>" . $traduction['MODIFICATION_EQUIPE']['BOUTON_MODIFIER_CONFIRM'] . "</button>";
+        }
+        echo "</form></center>";
     }
 
 
@@ -435,9 +439,13 @@ class gradeAdmin
         $date_fin = $_GET['date_fin'];
         echo "<div class='col-md-6 mb-3'>
         <label for='validationCustom01'>" . $traduction['MODIFICATION_PROJET']['LABEL_DATE_FIN'] . "</label>
-        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>
-        <button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_PROJET']['BOUTON_MODIFIER_CONFIRM'] . "</button>
-        </form></center>";
+        <input type='text' name='date_fin' class='form-control' id='validationCustom01' value='$date_fin'></div></div>";
+        if ($_SESSION['is_handicapped'] == 'non') {
+            echo "<button class='btn btn-success' type='submit'>" . $traduction['MODIFICATION_PROJET']['BOUTON_MODIFIER_CONFIRM'] . "</button>";
+        } else {
+            echo "<button class='btn btn-secondary' type='submit'>" . $traduction['MODIFICATION_PROJET']['BOUTON_MODIFIER_CONFIRM'] . "</button>";
+        }
+        echo "</form></center>";
     }
 
     public function modificationProjectConfirm()
